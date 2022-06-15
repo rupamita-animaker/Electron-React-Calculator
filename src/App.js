@@ -7,22 +7,27 @@ function App() {
   const operators = {
     '+' : {
       precedence: 1,
+      expression: 'a+b',
       action: (a, b) => {return a+b}
     },
     '-' : {
       precedence: 1,
+      expression: 'a-b',
       action: (a, b) => {return a-b}
     },
     '*' : {
       precedence: 2,
+      expression: 'a*b',
       action: (a, b) => {return a*b}
     },
     '/' : {
       precedence: 2,
+      expression: 'a/b',
       action: (a, b) => {return a/b}
     },
     '%' : {
       precedence: '3',
+      expression: 'a/100',
       action: (a) => {return a/100}
     }
   };
@@ -30,7 +35,6 @@ function App() {
   const [value, setValue] = useState(0); // last value enetered
   const [evaluate, setEvaluate] = useState(false); // will be set to true when '=' is clicked
   const [infix, setInfix] = useState([]);
-  const [postfix, setPostfix] = useState([]);
   const [lastInp, setLastInp] = useState(0);
 
   function handleInputChange(inp) {
@@ -44,15 +48,39 @@ function App() {
 
     if(inp[lastIndex] in operators || inp[lastIndex] == '=') {
       setLastInp(inp[lastIndex]); // the previous updated value will be acknowledged now and the latest value will be placed in queue
-      if(inp[lastIndex] != '=') {
-        setInfix([...infix, lastInp, inp[lastIndex]]);
+      if(inp[lastIndex] != '=' && inp[lastIndex] != '%') {
+        console.log('inp[lastIndex]: ' + inp[lastIndex]);
+        if(lastInp=='(' || lastInp==')') {
+          setInfix([...infix, inp[lastIndex]]);
+        }
+        else {
+          setInfix([...infix, lastInp, inp[lastIndex]]);
+        }
+      }
+      else if(inp[lastIndex] == '='){
+        if(lastInp!=')') {
+          setInfix([...infix, lastInp]);
+        }
+        setEvaluate(true);
       }
       else {
-        setEvaluate(true);
         setInfix([...infix, lastInp]);
       }
     } 
-    else if ((lastInp in operators || Number(lastInp) == 0) && inp[lastIndex] != '.') {
+    else if(((lastInp in operators || Number(lastInp) == 0) && inp[lastIndex]=='(') || inp[lastIndex]==')') {
+      setLastInp(inp[lastIndex]);
+      if(inp[lastIndex]=='(') {
+        setInfix([...infix, inp[lastIndex]]);
+      } else {
+        if(!(lastInp in operators) && lastInp!='(' && lastInp!=')') {
+          setInfix([...infix, lastInp, inp[lastIndex]]);
+        }
+        else {
+          setInfix([...infix, inp[lastIndex]]);
+        }
+      }
+    }
+    else if ((lastInp in operators || Number(lastInp) == 0 || lastInp == '(') && inp[lastIndex] != '.') {
       setLastInp(inp[lastIndex]);
     } 
     else {
@@ -63,21 +91,12 @@ function App() {
 
   return (
     <div className="App">
-      {/*<form>
-        <label>Enter number</label>
-        <input id='test-number' value={value} onChange={(event) => {
-          handleInputChange(event.target.value);
-        }}></input>
-        <div>{infix}</div>
-      </form>*/}
       <Screen
       value={value}
       evaluate={evaluate}
       infix={infix}
-      postfix={postfix}
       operators={operators}
       setValue={setValue}
-      setPostfix={setPostfix}
       handleInputChange={handleInputChange}
       />
       <Keypad

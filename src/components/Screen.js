@@ -4,10 +4,8 @@ function Screen({
     value,
     evaluate,
     infix,
-    postfix,
     operators,
     setValue,
-    setPostfix,
     handleInputChange
 }) {
     useEffect(() => {
@@ -18,10 +16,23 @@ function Screen({
             // infix to postfix
             infix.forEach((item) => {
                 if(!(item in operators)) {
-                    postf.push(item);
+                    console.log('inf item: ' + item);
+                    if(item!=')' && item!='(') {
+                        postf.push(Number(item));
+                    }
+                    else if(item=='(') {
+                        temp.push(item);
+                    }
+                    else if(item==')') {
+                        while(temp[temp.length-1]!='(') {
+                            console.log('temp[temp.length-1]: ' + temp[temp.length-1]);
+                            postf.push(temp.pop());
+                        }
+                        temp.pop();
+                    }
                 }
                 else {
-                    if(temp.length==0) {
+                    if(temp.length==0 || temp[temp.length-1]=='(') {
                         temp.push(item);
                     }
                     else {
@@ -44,10 +55,13 @@ function Screen({
                 }
                 else {
                     if(item!='%') {
-                        temp.push(operators[item].action(temp.pop(), temp.pop()));
+                        let b = temp.pop();
+                        let a = temp.pop();
+                        temp.push(operators[item].action(a, b));
                     }
                     else {
-                        temp.push(operators[item].action(temp.pop));
+                        let a = temp.pop();
+                        temp.push(operators[item].action(a));
                     }
                 }
             });

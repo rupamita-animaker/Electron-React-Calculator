@@ -24,11 +24,8 @@ function App() {
       setValue(inp);
     }
     if (inp === '') {
-      console.log('empty');
       return;
     }
-
-    console.log('inp[lastIndex]: ' + inp[lastIndex]);
 
     if(inp[lastIndex] in operators || inp[lastIndex] == '=') {
       setLastInp(inp[lastIndex]); // the previous updated value will be acknowledged now and the latest value will be placed in queue
@@ -37,36 +34,34 @@ function App() {
       }
       else {
         setInfix([...infix, lastInp]);
-        testFunc();
       }
     } 
     else if ((lastInp in operators || Number(lastInp) == 0) && inp[lastIndex] != '.') {
-      console.log('if 2 lastInp: ' + lastInp);
       setLastInp(inp[lastIndex]);
     } 
     else {
       setLastInp(lastInp + inp[lastIndex]);
     }
-    console.log('after (lastInp): ' + lastInp);
-    console.log('infix: ' + infix);
-  }
-
-  function testFunc() {
-    setInfix([...infix, 'eval']);
     console.log('infix: ' + infix);
   }
 
   return (
     <div className="App">
-      <form>
+      {/*<form>
         <label>Enter number</label>
         <input id='test-number' value={value} onChange={(event) => {
           handleInputChange(event.target.value);
         }}></input>
         <div>{infix}</div>
-      </form>
-      <Screen/>
-      <Keypad/>
+      </form>*/}
+      <Screen
+      value={value}
+      handleInputChange={handleInputChange}
+      />
+      <Keypad
+      value={value}
+      handleInputChange={handleInputChange}
+      />
     </div>
   );
 }

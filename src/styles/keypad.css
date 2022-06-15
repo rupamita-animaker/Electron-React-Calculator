@@ -1,0 +1,40 @@
+.keypad {
+    display: flex;
+}
+
+.operands {
+    display: flex;
+    flex-direction: column;
+}
+
+.bottom-row {
+    display: flex;
+}
+
+.bottom-row > div {
+    width: 50px;
+    height: 30px;
+    background-color: beige;
+    cursor: pointer;
+}
+
+.operators {
+    display: flex;
+}
+
+.operators-col-1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.operators-col-2 {
+    display: flex;
+    flex-direction: column;
+}
+
+.operator {
+    width: 50px;
+    height: 30px;
+    background-color: azure;
+    cursor: pointer;
+}

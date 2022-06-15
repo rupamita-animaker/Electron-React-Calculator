@@ -15,8 +15,10 @@ function Screen({
             console.log('infix is: ' + infix);
             // infix to postfix
             infix.forEach((item) => {
+                console.log('inf item: ' + item);
+                console.log('postf: ' + postf);
+                console.log('temp: ' + temp);
                 if(!(item in operators)) {
-                    console.log('inf item: ' + item);
                     if(item!=')' && item!='(') {
                         postf.push(Number(item));
                     }
@@ -36,7 +38,7 @@ function Screen({
                         temp.push(item);
                     }
                     else {
-                        while(temp.length>0 && (operators[temp[temp.length-1]].precedence > operators[item].precedence)) {
+                        while(temp.length>0 && (temp[temp.length-1]!='(') && (operators[temp[temp.length-1]].precedence > operators[item].precedence)) {
                             postf.push(temp.pop());
                         }
                         temp.push(item);

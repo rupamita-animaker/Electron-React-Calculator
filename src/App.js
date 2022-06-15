@@ -5,11 +5,26 @@ import Screen from './components/Screen';
 
 function App() {
   const operators = {
-    '+' : (a, b) => {return a+b},
-    '-' : (a, b) => {return a-b},
-    '*' : (a, b) => {return a*b},
-    '/' : (a, b) => {return a/b},
-    '%' : (a) => {return a/100}
+    '+' : {
+      precedence: 1,
+      action: (a, b) => {return a+b}
+    },
+    '-' : {
+      precedence: 1,
+      action: (a, b) => {return a-b}
+    },
+    '*' : {
+      precedence: 2,
+      action: (a, b) => {return a*b}
+    },
+    '/' : {
+      precedence: 2,
+      action: (a, b) => {return a/b}
+    },
+    '%' : {
+      precedence: '3',
+      action: (a) => {return a/100}
+    }
   };
 
   const [value, setValue] = useState(0); // last value enetered
@@ -33,6 +48,7 @@ function App() {
         setInfix([...infix, lastInp, inp[lastIndex]]);
       }
       else {
+        setEvaluate(true);
         setInfix([...infix, lastInp]);
       }
     } 
@@ -56,6 +72,12 @@ function App() {
       </form>*/}
       <Screen
       value={value}
+      evaluate={evaluate}
+      infix={infix}
+      postfix={postfix}
+      operators={operators}
+      setValue={setValue}
+      setPostfix={setPostfix}
       handleInputChange={handleInputChange}
       />
       <Keypad

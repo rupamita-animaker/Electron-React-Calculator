@@ -132,7 +132,7 @@
     color: rgba(253,253,252,255);
 }
 
-@media screen and (max-width: 555px) {
+@media screen and (max-width: 300px) {
     .digit {
         border: none;
         outline: none;

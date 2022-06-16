@@ -42,16 +42,6 @@ function Screen({
                             console.log('pushing: ' + item);
                             infix.push(item);
                         }
-                        /*
-                        if(!(nextItem in ['(', ')', '=']) && !(nextItem in operators)) {
-                        // if nextItem is either a digit or decimal point
-                        lastItem = item;
-                        }
-                        else {
-                        // single digit number found
-                        lastItem = item;
-                        infix.push(item);
-                        }*/
                     }
                     else{
                         lastItem = lastItem + item; // add in digit or period and build number
@@ -95,7 +85,7 @@ function Screen({
                         temp.push(item);
                     }
                     else {
-                        while(temp.length>0 && (temp[temp.length-1]!='(') && (operators[temp[temp.length-1]].precedence > operators[item].precedence)) {
+                        while(temp.length>0 && (temp[temp.length-1]!='(') && (operators[temp[temp.length-1]].precedence >= operators[item].precedence)) {
                             postf.push(temp.pop());
                         }
                         temp.push(item);

@@ -9,7 +9,7 @@ app.on('ready', () => {
         height: 700,
         width: 778
     });
-    mainWindow.webContents.openDevTools(); // open dev tools for browser window
+    //mainWindow.webContents.openDevTools(); // open dev tools for browser window
     //mainWindow.loadURL(`file://${__dirname}/index.html`);
     mainWindow.loadURL('http://localhost:3000');
 })

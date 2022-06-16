@@ -3,10 +3,9 @@ import React, { useEffect } from 'react';
 function Screen({
     value,
     evaluate,
-    infix,
     operators,
     setValue,
-    setInfix,
+    setEvaluate,
     handleInputChange
 }) {
     useEffect(() => {
@@ -33,7 +32,7 @@ function Screen({
                         lastItem = item;
                         infix.push(item);
                     }
-                    else if((lastItem in operators || Number(lastItem)==0 || lastItem=='(' || lastItem==')') && item!='.') {
+                    else if((lastItem in operators || (Number(lastItem)==0 && lastItem!='0.') || lastItem=='(' || lastItem==')') && item!='.') {
                         // if item is a digit and last item was either of operators, 0, ( or )
                         lastItem = item;
                         //console.log('check: ' + nextItem in ['(', ')', '=']);
@@ -42,6 +41,9 @@ function Screen({
                             console.log('pushing: ' + item);
                             infix.push(item);
                         }
+                    }
+                    else if(lastItem=='0' && item=='.') {
+                        lastItem = lastItem + item;
                     }
                     else{
                         lastItem = lastItem + item; // add in digit or period and build number
@@ -60,8 +62,11 @@ function Screen({
             // infix to postfix
             let temp = [];
             let postf = [];
+            lastItem = 0;
             console.log('infix is: ' + infix);
-            infix.forEach((item) => {
+            for(let i=0; i<infix.length; i++) {
+                let item = infix[i];
+                let nextItem = (i<infix.length-1) ? infix[i+1] : '';
                 console.log('inf item: ' + item);
                 console.log('postf: ' + postf);
                 console.log('temp: ' + temp);
@@ -81,7 +86,11 @@ function Screen({
                     }
                 }
                 else {
-                    if(temp.length==0 || temp[temp.length-1]=='(') {
+                    if((lastItem=='0' || lastItem=='(') && (item=='+' || item=='-') && (!(nextItem in operators) && !(['(', ')', ''].includes(nextItem)))) {
+                        postf.push(Number(item+nextItem));
+                        i = i + 1;
+                    }
+                    else if(temp.length==0 || temp[temp.length-1]=='(') {
                         temp.push(item);
                     }
                     else {
@@ -91,7 +100,8 @@ function Screen({
                         temp.push(item);
                     }
                 }
-            });
+                lastItem = item;
+            }
             while(temp.length>0) {
                 postf.push(temp.pop());
             }
@@ -105,8 +115,13 @@ function Screen({
                 else {
                     if(item!='%') {
                         let b = temp.pop();
-                        let a = temp.pop();
-                        temp.push(operators[item].action(a, b));
+                        if((item=='-' || item=='+') && temp.length==0) {
+                            temp.push(Number(item+b));
+                        }
+                        else {
+                            let a = temp.pop();
+                            temp.push(operators[item].action(a, b));
+                        }
                     }
                     else {
                         let a = temp.pop();
@@ -114,14 +129,17 @@ function Screen({
                     }
                 }
             });
-            setValue(temp.pop());
+            if(temp.length>0) {
+                setValue(temp.pop());
+            }
+            setEvaluate(false);
         }
     }, [evaluate]);
 
     return (
         <div className="screen">
             <form>
-                <input id='test-number' value={value} onChange={(event) => {
+                <input id='input-expr' value={value} onChange={(event) => {
                 handleInputChange(event.target.value);
                 }}></input>
             </form>

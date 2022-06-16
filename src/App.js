@@ -1,14 +1,12 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Keypad from './components/Keypad';
 import Screen from './components/Screen';
 
 function App() {
-  window.addEventListener('keypress', (event) => {
-    if(event.key == 13) {
-      event.preventDefault();
-    }
-  });
+  const [value, setValue] = useState(0); // last value enetered
+  const [evaluate, setEvaluate] = useState(false); // will be set to true when '=' is clicked
+  
   const operators = {
     '+' : {
       precedence: 1,
@@ -37,9 +35,6 @@ function App() {
     }
   };
 
-  const [value, setValue] = useState(0); // last value enetered
-  const [evaluate, setEvaluate] = useState(false); // will be set to true when '=' is clicked
-
   function handleInputChange(inp) {
     let lastIndex = inp.length - 1;
     if(inp[lastIndex] != '=') {
@@ -58,6 +53,18 @@ function App() {
       return;
     }*/
   }
+/*
+  useEffect(() => {
+    window.addEventListener('keypress', (event) => {
+      if(event.key=='Enter') {
+        event.preventDefault();
+        console.log(event.key);
+        if(value!=0) {
+          handleInputChange(value);
+        }
+      }
+    });
+  }, [value]);*/
 
   return (
     <div className="App">

@@ -1,4 +1,5 @@
 @import url('./styles/keypad.css');
+@import url('./styles/screen.css');
 
 .App {
   text-align: center;
@@ -6,6 +7,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(245,104,156,255);
+}
+
+.calculator{
   width: 90%;
   height: 90%;
+  background-color: rgba(67,67,67,255);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px  rgba(136,140,139,255) solid;
+  outline: 2px solid rgba(42,42,33,255);
+  border-radius: 17px;
 }

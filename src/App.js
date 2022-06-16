@@ -4,6 +4,11 @@ import Keypad from './components/Keypad';
 import Screen from './components/Screen';
 
 function App() {
+  window.addEventListener('keypress', (event) => {
+    if(event.key == 13) {
+      event.preventDefault();
+    }
+  });
   const operators = {
     '+' : {
       precedence: 1,
@@ -40,27 +45,37 @@ function App() {
     if(inp[lastIndex] != '=') {
       setValue(inp);
     }
-    else {
-      setEvaluate(true);
+    else if(inp[lastIndex]=='=' && lastIndex!=0 && inp[lastIndex-1]=='=') {
+      setValue(0);
     }
+    else {
+      if(value!==0) {
+        setEvaluate(true);
+      }
+    }
+    /*
     if (inp === '') {
       return;
-    }
+    }*/
   }
 
   return (
     <div className="App">
-      <Screen
-      value={value}
-      evaluate={evaluate}
-      operators={operators}
-      setValue={setValue}
-      handleInputChange={handleInputChange}
-      />
-      <Keypad
-      value={value}
-      handleInputChange={handleInputChange}
-      />
+      <div className='calculator'>
+        <Screen
+        value={value}
+        evaluate={evaluate}
+        operators={operators}
+        setValue={setValue}
+        setEvaluate={setEvaluate}
+        handleInputChange={handleInputChange}
+        />
+        <Keypad
+        value={value}
+        setValue={setValue}
+        handleInputChange={handleInputChange}
+        />
+      </div>
     </div>
   );
 }

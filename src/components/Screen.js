@@ -6,14 +6,71 @@ function Screen({
     infix,
     operators,
     setValue,
+    setInfix,
     handleInputChange
 }) {
     useEffect(() => {
         if(evaluate) {
+            // set up infix 
+            let lastItem = '0';
+            let infix = [];
+            console.log('value: ' + value);
+            for(let i=0; i<value.length; i++) {
+                let item = value[i];
+                let nextItem;
+                if(i<value.length-1) {
+                nextItem = value[i+1];
+                }
+                else {
+                nextItem = '=';
+                }
+                console.log('lastItem: ' + lastItem);
+                console.log('item: ' + item);
+                console.log('nextItem: ' + nextItem);
+                if(!(item in operators)) {
+                    if(/*(Number(lastItem)==0 || lastItem in operators) &&*/ (item=='(' || item==')')) {
+                        // if you get ( or ) add as single item to infix
+                        lastItem = item;
+                        infix.push(item);
+                    }
+                    else if((lastItem in operators || Number(lastItem)==0 || lastItem=='(' || lastItem==')') && item!='.') {
+                        // if item is a digit and last item was either of operators, 0, ( or )
+                        lastItem = item;
+                        //console.log('check: ' + nextItem in ['(', ')', '=']);
+                        if((['(', ')', '='].includes(nextItem)) || (nextItem in operators)) {
+                            // single digit number found
+                            console.log('pushing: ' + item);
+                            infix.push(item);
+                        }
+                        /*
+                        if(!(nextItem in ['(', ')', '=']) && !(nextItem in operators)) {
+                        // if nextItem is either a digit or decimal point
+                        lastItem = item;
+                        }
+                        else {
+                        // single digit number found
+                        lastItem = item;
+                        infix.push(item);
+                        }*/
+                    }
+                    else{
+                        lastItem = lastItem + item; // add in digit or period and build number
+                        if((['(', ')', '='].includes(nextItem)) || (nextItem in operators)) {
+                            // when number ends, add to infix
+                            infix.push(lastItem);
+                        }
+                    }
+                }
+                else {
+                    lastItem = item;
+                    infix.push(item);
+                }
+                console.log('infix: ' + infix);
+            }
+            // infix to postfix
             let temp = [];
             let postf = [];
             console.log('infix is: ' + infix);
-            // infix to postfix
             infix.forEach((item) => {
                 console.log('inf item: ' + item);
                 console.log('postf: ' + postf);
